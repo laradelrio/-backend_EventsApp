@@ -6,6 +6,8 @@ const {db} = require('../../db');
 const f = require('./usersHelperFunctions');
 const { response } = require('express');
 
+const dotenv = require('dotenv');
+dotenv.config({path: './.env'}); 
 
 //Get ALL USERS
 function getUsers() {
@@ -17,6 +19,23 @@ function getUsers() {
                 resolve({ status: true, data: result });
             }
         });
+    })
+}
+
+//GET ONE USER
+function getOneUser(id){
+    return new Promise((resolve, reject) => {
+        try{
+            db.query('SELECT * FROM users WHERE id_user=' + id, (error, result) => {
+                if (error) {
+                    console.log("User not found");
+                } else {
+                    resolve({ status: true, data: { username: result[0].username, email: result[0].email, image: result[0].image } });
+                }
+            }); 
+        }catch(error){
+            reject({status: false, message: "User not found"});
+        }
     })
 }
 
@@ -53,10 +72,51 @@ async function postUser(req) {
     }
 }
     
+//LOG IN
+async function login(req){
+   return new Promise(async (resolve, reject) =>{
+        if (await f.isRegistered("email", req.body.email) === false) {
+            reject({ status: false, message: `No account associated to this email` });
+        }else {
+            let storedPassword = await f.getStoredPassword(req.body.email);
+            let isPasswordValid = await bcryptjs.compare(req.body.password, storedPassword[0].password);
+            
+            if(!isPasswordValid){
+                    reject({ status: false, message: "Incorrect Password" });
+            }else{
+                let userId = await f.getUserIdByEmail(req.body.email);
+                let id = userId[0].id_user;
+                const token = jwt.sign({
+                    id_user: id,
+                    }, process.env.TOKEN_SECRET)
+                        
+                resolve(token); 
+            }
+        }
+    })
+}
+    
+       
+    
+    
+   
+    
+
+    
+
+    
+
+   
 
 
 
- module.exports = {getUsers, postUser}
+
+
+
+
+
+
+ module.exports = {getUsers, getOneUser, postUser, login}
 
 /*
 

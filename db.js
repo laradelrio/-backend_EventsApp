@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 
 dotenv.config({path: './.env'}); 
 
+
 //Establish and connect to DB
 const db = mysql.createConnection({
     host: process.env.DATABASE_EVENT_HOST,
@@ -20,3 +21,4 @@ db.connect((error) => {
 });
 
 exports.db = db;
+
