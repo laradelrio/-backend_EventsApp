@@ -3,14 +3,14 @@ const router = express.Router();
 
 const usersCRUD = require('./users')
 
-//Get All UusersS
+//Get All Users
 router.get('/', async(req, res)=>{
     let response = await usersCRUD.getUsers();
     res.send(response);
 })
 
 //get ONE User
-router.get('/:id', async(req, res) => {
+router.get('/user/:id', async(req, res) => {
     let userId = req.params.id;
     try{
         let response = await usersCRUD.getOneUser(userId);
@@ -19,7 +19,6 @@ router.get('/:id', async(req, res) => {
         res.send(error);
     }
 })
-
 
 //Add Users
 router.post('/add', async(req, res) => {
@@ -42,8 +41,54 @@ router.get('/login', async(req, res) => {
     }catch(error){
         res.send(error);
     }
-
 })
+
+//verify Token
+router.get('/validateToken', async(req, res) => {
+    try{
+        let response = await usersCRUD.validateToken(req.body.token);
+        res.send(response)
+    }catch(error){
+        res.send(error);
+    }
+})
+
+//UPDATE USER INFO
+router.put('/update/:id', async(req, res) => {
+    let userId = req.params.id;
+    try{
+        let response = await usersCRUD.updateUser(userId,req);
+        res.send(response);
+    }catch(error){
+        res.send(error);
+    }
+})
+
+//UPDATE USER PASSWORD
+router.put('/update/password/:id', async(req, res) => {
+    let userId = req.params.id;
+    try{
+        let response = await usersCRUD.updateUserPassword(userId,req);
+        res.send(response);
+    }catch(error){
+        res.send(error);
+    }
+})
+
+//UPDATE USER PASSWORD
+router.delete('/delete/:id', async(req, res) => {
+    let userId = req.params.id;
+    try{
+        let response = await usersCRUD.deleteUser(userId);
+        res.send(response);
+    }catch(error){
+        res.send(error);
+    }
+})
+
+
+
+
 
 
 

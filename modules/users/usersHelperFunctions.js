@@ -34,7 +34,7 @@ function getStoredPassword(email){
     })
 }
 
-//get a strored password from a user
+//get a stored password from a user
 function getUserIdByEmail(email){
     return new Promise ((resolve, reject) => {
         db.query(`SELECT id_user FROM users WHERE email='${email}'`, (error, results)=>{
@@ -47,6 +47,17 @@ function getUserIdByEmail(email){
     })
 }
 
+//get changed fields
+function getChangedFields(req){
+    let changes = [];
+    Object.entries(req.body).forEach(([key, value]) => {
+       if(value.length>0){
+        changes.push({[key]: value})
+        }   
+    })
+    return changes
+}
+
 module.exports = {
-    isRegistered, isSamePassword, getStoredPassword, getUserIdByEmail
+    isRegistered, isSamePassword, getStoredPassword, getUserIdByEmail, getChangedFields
 }
