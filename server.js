@@ -9,7 +9,7 @@ server.use(bodyParser.json());
 
 server.get('/', (req, res) => {
     res.send('Server on local host 8080'); 
-  });
+});
 
 //Establish port - Listen if server is running correctly
 server.listen(8080, (error) =>{
@@ -22,7 +22,10 @@ server.listen(8080, (error) =>{
 
 
 //Routes
-const users = require('./modules/users/router')
 
-server.use('/api/users', users);
+const usersRoute = require('./modules/users/router');
+const eventsRoute = require('./modules/events/router');
+server.use('/api/users', usersRoute);
+server.use('/api/events', eventsRoute);
+
 
