@@ -23,8 +23,8 @@ server.listen(8080, (error) =>{
 
 //Routes
 
-const usersRoute = require('./modules/users/router');
-const eventsRoute = require('./modules/events/router');
+const usersRoute = require('./modules/users/routerUsers');
+const eventsRoute = require('./modules/events/routerEvents');
 server.use('/api/users', usersRoute);
 server.use('/api/events', eventsRoute);
 
