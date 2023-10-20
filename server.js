@@ -21,6 +21,16 @@ server.listen(8080, (error) =>{
 })
 
 
+// a middleware with no mount path; gets executed for every request to the app
+server.use(function(req, res, next) {
+    res.setHeader("Access-Control-Allow-Origin", 'http://localhost:4200');
+    res.header(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept"
+      );
+    next();
+  });
+
 //Routes
 
 const usersRoute = require('./modules/users/routerUsers');
