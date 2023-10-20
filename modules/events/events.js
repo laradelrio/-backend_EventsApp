@@ -1,7 +1,8 @@
 const { server } = require('../../server');
 const {db} = require('../../db');
 
-const f = require('./eventsHelperFunctions');
+const f = require('../users/usersHelperFunctions');
+// const f = require('./eventsHelperFunctions')
 const { response } = require('express');
 
 const dotenv = require('dotenv');
@@ -38,37 +39,63 @@ function getOneEvent(id){
 }
 
 
-//ADD USER
+//ADD EVENT
 async function postEvent(req) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let sql = `INSERT INTO events (name, user_id, category, description, date, time, location, image) VALUES ('${req.body.name}','${req.body.user_id}','${req.body.category}','${req.body.description}', '${req.body.date}', '${req.body.time}', '${req.body.location}','${req.body.image}')`;
 
-    // if (await f.isRegistered("email", req.body.email) === true) {
-    //     return ({ status: false, message: `Email Already Registered` });
-    // }
-
-    // if (await f.isRegistered("username", req.body.username) === true) {
-    //     return ({ status: false, message: `Username Taken` });
-    // }
- //USER THAT IS CREATING THE EVENT EXISTS -->
-    if (f.isSamePassword(req.body.password, req.body.passwordConfirmed) === false) {
-        return ({ status: false, message: "Passwords Don't Match" });
-    } else {
-        return new Promise(async (resolve, reject) => {
-            try {
-                //CHANGE THIS TO MATCH EVENTS
-                let sql = `INSERT INTO users (username, email, password) VALUES ('${req.body.username}','${req.body.email}','${hashedPassword}')`;
-
-                db.query(sql, (error) => {
-                    if (error) {
-                        reject({ status: false, message: "Event Creation Failed" });
-                    } else {
-                        resolve({ status: true, message: `Event Created Successfully` });
-                    }
-                });
-            } catch (error) {
-                reject("Unable to Create Event");
-            }
-        })
-    }
+            db.query(sql, (error) => {
+                if (error) {
+                    reject({ status: false, message: "Event Creation Failed", error });
+                } else {
+                    resolve({ status: true, message: `Event Created Successfully` });
+                }
+            });
+        } catch (error) {
+            reject({status: false, message: "Unable to Create Event"});
+        }
+    }) 
 }
 
-module.exports = {getEvents, getOneEvent, postEvent}
+
+//UPDATE EVENT INFO
+function updateEvent(eventId, req){
+    return new Promise (async(resolve, reject) =>{
+        try{
+            let changes = f.getChangedFields(req);
+            changes.forEach((change) =>{
+                db.query(`UPDATE events SET ${Object.keys(change)} ='${Object.values(change)}' WHERE id_event=${eventId}`, (error) => {
+                    if (error) {
+                        reject({ status: false, message: "Event Update Failed" });
+                    } else {
+                        resolve({ status: true, message: `Event Updated Successfully` });
+                    }
+                });        
+            })
+
+        }catch(error){
+            reject({status: false, message: "Event Update Failed"})
+        }
+    })
+}
+
+//DELETE USER
+function deleteEvent(eventId){
+    return new Promise ((resolve, reject) =>{
+        try{
+            db.query(`DELETE FROM events WHERE id_event=`+ eventId , (error) => {
+            if (error) {
+                reject({ status: false, message: "Event Deletion Failed", error });
+            } else {
+                resolve({ status: true, message: "Event Deleted Successfully" });
+            }
+            });
+        }catch(error){
+            reject({ status: false, message: "Event Deletion Failed", error});
+        }     
+    })   
+}
+
+
+module.exports = {getEvents, getOneEvent, postEvent, updateEvent, deleteEvent}

@@ -174,8 +174,7 @@ function deleteUser(userId){
         }catch(error){
             reject({ status: false, message: "User Deletion Failed"});
         }     
-    })
-        
+    })   
 }
  
 module.exports = {getUsers, login, getOneUser, postUser,  validateToken, updateUser, updateUserPassword, deleteUser}

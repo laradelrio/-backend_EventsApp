@@ -75,7 +75,7 @@ router.put('/update/password/:id', async(req, res) => {
     }
 })
 
-//UPDATE USER PASSWORD
+//DELETE USER
 router.delete('/delete/:id', async(req, res) => {
     let userId = req.params.id;
     try{
