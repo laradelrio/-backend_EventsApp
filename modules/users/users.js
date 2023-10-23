@@ -99,6 +99,9 @@ async function login(req){
 //validate token
 function validateToken(token){
     return new Promise((resolve, reject) => {
+        if(token === null){
+            reject({ status: false, message: "Access Denied" })
+        }
          let secretJWT = process.env.TOKEN_SECRET;
          const verified = jwt.verify(token, secretJWT);
          

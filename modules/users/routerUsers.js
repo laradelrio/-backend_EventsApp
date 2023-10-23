@@ -44,7 +44,7 @@ router.post('/login', async(req, res) => {
 })
 
 //verify Token
-router.get('/validateToken', async(req, res) => {
+router.post('/validateToken', async(req, res) => {
     try{
         let response = await usersCRUD.validateToken(req.body.token);
         res.send(response)
