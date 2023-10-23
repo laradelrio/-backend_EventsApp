@@ -31,7 +31,7 @@ router.post('/add', async(req, res) => {
 })
 
 //Login
-router.get('/login', async(req, res) => {
+router.post('/login', async(req, res) => {
     try{
         let token = await usersCRUD.login(req);
         res.header('auth-token', token).json({
