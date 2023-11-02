@@ -21,6 +21,19 @@ function getEvents() {
     })
 }
 
+//Get Events by User
+function getEventsByUser(userId) {
+    return new Promise((resolve, reject) => {
+        db.query('SELECT * FROM events LEFT JOIN users ON events.user_id=users.id_user WHERE user_id=' + userId, (error, result) => {
+            if (error) {
+                reject({ status: false, message: "Unable to get Events by user" });
+            } else {
+                resolve({ status: true, data: result });
+            }
+        });
+    })
+}
+
 //GET ONE EVENT
 function getOneEvent(id){
     return new Promise((resolve, reject) => {

@@ -10,6 +10,13 @@ router.get('/', async(req, res)=>{
     res.send(response);
 })
 
+//Get All Events by User
+router.get('/events/user/:id', async(req, res)=>{
+    let userId = req.params.id;
+    let response = await eventsCRUD.getEventsByUser(userId);
+    res.send(response);
+})
+
 //get ONE User
 router.get('/event/:id', async(req, res) => {
     let eventId = req.params.id;
