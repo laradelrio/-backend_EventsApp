@@ -11,7 +11,7 @@ router.get('/', async(req, res)=>{
 })
 
 //Get All Events by User
-router.get('/events/user/:id', async(req, res)=>{
+router.get('/user/:id', async(req, res)=>{
     let userId = req.params.id;
     let response = await eventsCRUD.getEventsByUser(userId);
     res.send(response);
