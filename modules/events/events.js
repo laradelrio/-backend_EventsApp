@@ -56,7 +56,7 @@ function getOneEvent(id){
 async function postEvent(req) {
     return new Promise(async (resolve, reject) => {
         try {
-            let sql = `INSERT INTO events (name, user_id, category, description, date, time, address, longitude, latitude, image) VALUES ('${req.body.name}','${req.body.user_id}','${req.body.category}','${req.body.description}', '${req.body.date}', '${req.body.time}', '${req.body.location}', '${req.body.longitude}', '${req.body.latitude}','${req.body.image}')`;
+            let sql = `INSERT INTO events (name, user_id, category, description, date, time, address, longitude, latitude, image) VALUES ('${req.body.name}','${req.body.user_id}','${req.body.category}','${req.body.description}', '${req.body.date}', '${req.body.time}', '${req.body.address}', '${req.body.longitude}', '${req.body.latitude}','${req.body.image}')`;
 
             db.query(sql, (error) => {
                 if (error) {
