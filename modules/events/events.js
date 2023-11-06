@@ -42,7 +42,7 @@ function getOneEvent(id){
                 if (error) {
                     reject({status: false, message: "Event not found"});
                 } else {
-                    resolve({ status: true, data: result[0] });
+                    resolve({ status: true, data: [ result[0] ]});
                 }
             }); 
         }catch(error){
