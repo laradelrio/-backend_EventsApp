@@ -60,4 +60,14 @@ router.delete('/delete/:id', async(req, res) => {
     }
 })
 
+//GET AMOUNT OF EVENTS PER CATEGORY
+router.get('/categories/count', async(req, res) => {
+    try{
+        let response = await eventsCRUD.getCountCategories();
+        res.send(response);
+    }catch(error){
+        res.send(error);
+    }
+})
+
 module.exports = router

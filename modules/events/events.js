@@ -110,5 +110,26 @@ function deleteEvent(eventId){
     })   
 }
 
+function getCountCategories(){
+    return new Promise((resolve, reject) => {
+        try{
+            let sql = `SELECT eC.name_category, COUNT(e.name) AS amount 
+                        FROM event_categories eC
+                        LEFT JOIN events e
+                        ON eC.name_category=e.category
+                        GROUP BY name_category`;
 
-module.exports = {getEvents, getOneEvent, getEventsByUser, postEvent, updateEvent, deleteEvent}
+            db.query(sql, (error, result) => {
+                if (error) {
+                    reject({status: false, message: 'SQL event my category query failed'});
+                } else {
+                    resolve({ status: true, data: result });
+                }
+            }); 
+        }catch(error){
+            reject({status: false, message: "Event by category search failed"});
+        }
+    }) 
+}
+
+module.exports = {getEvents, getOneEvent, getEventsByUser, postEvent, updateEvent, deleteEvent, getCountCategories}
