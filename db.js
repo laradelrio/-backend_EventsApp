@@ -9,7 +9,8 @@ const db = mysql.createConnection({
     host: process.env.DATABASE_EVENT_HOST,
     user: process.env.DATABASE_EVENT_USER,
     password: process.env.DATABASE_EVENT_PASSWORD,
-    database: process.env.DATABASE_EVENT
+    database: process.env.DATABASE_EVENT,
+    timezone: 'Europe/Madrid',
 });
 
 db.connect((error) => {

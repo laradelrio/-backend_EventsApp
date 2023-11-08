@@ -1,13 +1,13 @@
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { server } = require('../../server');
-const {db} = require('../../db');
+const { db } = require('../../db');
 
 const f = require('./usersHelperFunctions');
 const { response } = require('express');
 
 const dotenv = require('dotenv');
-dotenv.config({path: './.env'}); 
+dotenv.config({ path: './.env' });
 
 //Get ALL USERS
 function getUsers() {
@@ -23,18 +23,18 @@ function getUsers() {
 }
 
 //GET ONE USER
-function getOneUser(id){
+function getOneUser(id) {
     return new Promise((resolve, reject) => {
-        try{
+        try {
             db.query('SELECT * FROM users WHERE id_user=' + id, (error, result) => {
                 if (error) {
-                    reject({status: false, message: "User not found"});
+                    reject({ status: false, message: "User not found" });
                 } else {
                     resolve({ status: true, data: { username: result[0].username, email: result[0].email, image: result[0].image } });
                 }
-            }); 
-        }catch(error){
-            reject({status: false, message: "User search failed found"});
+            });
+        } catch (error) {
+            reject({ status: false, message: "User search failed found" });
         }
     })
 }
@@ -71,40 +71,40 @@ async function postUser(req) {
         })
     }
 }
-    
+
 //LOG IN
-async function login(req){
-   return new Promise(async (resolve, reject) =>{
+async function login(req) {
+    return new Promise(async (resolve, reject) => {
         if (await f.isRegistered("email", req.body.email) === false) {
             reject({ status: false, message: `No account associated to this email` });
-        }else {
+        } else {
             let storedPassword = await f.getStoredPassword(req.body.email);
             let isPasswordValid = await bcryptjs.compare(req.body.password, storedPassword[0].password);
-            
-            if(!isPasswordValid){
-                    reject({ status: false, message: "Incorrect Password" });
-            }else{
+
+            if (!isPasswordValid) {
+                reject({ status: false, message: "Incorrect Password" });
+            } else {
                 let userId = await f.getUserIdByEmail(req.body.email);
                 let id = userId[0].id_user;
                 const token = jwt.sign({
                     id_user: id,
-                    }, process.env.TOKEN_SECRET)
-                        
-                resolve(token); 
+                }, process.env.TOKEN_SECRET)
+
+                resolve(token);
             }
         }
     })
 }
-    
+
 //validate token
-function validateToken(token){
+function validateToken(token) {
     return new Promise((resolve, reject) => {
-        if(token === null){
+        if (token === null) {
             reject({ status: false, message: "Access Denied" })
         }
-         let secretJWT = process.env.TOKEN_SECRET;
-         const verified = jwt.verify(token, secretJWT);
-         
+        let secretJWT = process.env.TOKEN_SECRET;
+        const verified = jwt.verify(token, secretJWT);
+
         if (verified) {
             resolve({ status: true, message: "JWT verified" });
         } else {
@@ -115,70 +115,70 @@ function validateToken(token){
 
 
 //UPDATE USERS INFO
-function updateUser(id, req){
-    return new Promise (async(resolve, reject) =>{
-        try{
+function updateUser(id, req) {
+    return new Promise(async (resolve, reject) => {
+        try {
             let changes = f.getChangedFields(req);
-           
-            changes.forEach((change) =>{
+
+            changes.forEach((change) => {
                 db.query(`UPDATE users SET ${Object.keys(change)} ='${Object.values(change)}' WHERE id_user=${id}`, (error) => {
                     if (error) {
                         reject({ status: false, message: "User Update Failed" });
                     } else {
                         resolve({ status: true, message: `User Updated Successfully` });
                     }
-                });        
+                });
             })
 
-        }catch(error){
-            reject({status: false, message: "User Update Failed"})
+        } catch (error) {
+            reject({ status: false, message: "User Update Failed" })
         }
-        
+
     })
 }
 
-function updateUserPassword(id, req){
-    return new Promise (async(resolve, reject) =>{
-        try{
-            
-            if(f.isSamePassword(req.body.password, req.body.passwordConfirmed) === true){
+function updateUserPassword(id, req) {
+    return new Promise(async (resolve, reject) => {
+        try {
+
+            if (f.isSamePassword(req.body.password, req.body.passwordConfirmed) === true) {
                 let hashedPassword = await bcryptjs.hash(req.body.password, 8);
-            
+
                 db.query(`UPDATE users SET password ='${hashedPassword}' WHERE id_user=${id}`, (error) => {
                     if (error) {
                         reject({ status: false, message: "Password Update Failed" });
                     } else {
                         resolve({ status: true, message: `Password Updated Successfully` });
                     }
-                });  
-            }else{
-                reject({status: false, message: "Passwords don't match"})
-            }     
-        
+                });
+            } else {
+                reject({ status: false, message: "Passwords don't match" })
+            }
 
-        }catch(error){
-            reject({status: false, message: "Password Update Failed"})
+
+        } catch (error) {
+            reject({ status: false, message: "Password Update Failed" })
         }
-        
+
     })
 }
 
 //DELETE USER
-function deleteUser(userId){
-    return new Promise ((resolve, reject) =>{
-        try{
+function deleteUser(userId) {
+    return new Promise((resolve, reject) => {
+        try {
             db.query("DELETE FROM users WHERE id_user=" + userId + "", (error) => {
-            if (error) {
-                reject({ status: false, message: "User Deletion Failed" });
-            } else {
-                resolve({ status: true, message: "User Deleted Successfully" });
-            }
+                if (error) {
+                    reject({ status: false, message: "User Deletion Failed" });
+                } else {
+                    resolve({ status: true, message: "User Deleted Successfully" });
+                }
             });
-        }catch(error){
-            reject({ status: false, message: "User Deletion Failed"});
-        }     
-    })   
+        } catch (error) {
+            reject({ status: false, message: "User Deletion Failed" });
+        }
+    })
 }
- 
-module.exports = {getUsers, login, getOneUser, postUser,  validateToken, updateUser, updateUserPassword, deleteUser}
+
+module.exports = { getUsers, login, getOneUser, postUser, validateToken, updateUser, updateUserPassword, deleteUser }
 

@@ -1,12 +1,12 @@
 const { server } = require('../../server');
-const {db} = require('../../db');
+const { db } = require('../../db');
 
 const f = require('../users/usersHelperFunctions');
 // const f = require('./eventsHelperFunctions')
 const { response } = require('express');
 
 const dotenv = require('dotenv');
-dotenv.config({path: './.env'}); 
+dotenv.config({ path: './.env' });
 
 //Get ALL EVENTS
 function getEvents() {
@@ -35,18 +35,18 @@ function getEventsByUser(userId) {
 }
 
 //GET ONE EVENT
-function getOneEvent(id){
+function getOneEvent(id) {
     return new Promise((resolve, reject) => {
-        try{
+        try {
             db.query('SELECT * FROM events WHERE id_event=' + id, (error, result) => {
                 if (error) {
-                    reject({status: false, message: "Event not found"});
+                    reject({ status: false, message: "Event not found" });
                 } else {
-                    resolve({ status: true, data: [ result[0] ]});
+                    resolve({ status: true, data: [result[0]] });
                 }
-            }); 
-        }catch(error){
-            reject({status: false, message: "Event search failed found"});
+            });
+        } catch (error) {
+            reject({ status: false, message: "Event search failed found" });
         }
     })
 }
@@ -73,46 +73,46 @@ async function postEvent(req) {
 
 
 //UPDATE EVENT INFO
-function updateEvent(eventId, req){
-    return new Promise (async(resolve, reject) =>{
-        try{
+function updateEvent(eventId, req) {
+    return new Promise(async (resolve, reject) => {
+        try {
             let changes = f.getChangedFields(req);
-            changes.forEach((change) =>{
+            changes.forEach((change) => {
                 db.query(`UPDATE events SET ${Object.keys(change)} ='${Object.values(change)}' WHERE id_event=${eventId}`, (error) => {
                     if (error) {
                         reject({ status: false, message: "Event Update Failed" });
                     } else {
                         resolve({ status: true, message: `Event Updated Successfully` });
                     }
-                });        
+                });
             })
 
-        }catch(error){
-            reject({status: false, message: "Event Update Failed"})
+        } catch (error) {
+            reject({ status: false, message: "Event Update Failed" })
         }
     })
 }
 
 //DELETE USER
-function deleteEvent(eventId){
-    return new Promise ((resolve, reject) =>{
-        try{
-            db.query(`DELETE FROM events WHERE id_event=`+ eventId , (error) => {
-            if (error) {
-                reject({ status: false, message: "Event Deletion Failed", error });
-            } else {
-                resolve({ status: true, message: "Event Deleted Successfully" });
-            }
+function deleteEvent(eventId) {
+    return new Promise((resolve, reject) => {
+        try {
+            db.query(`DELETE FROM events WHERE id_event=` + eventId, (error) => {
+                if (error) {
+                    reject({ status: false, message: "Event Deletion Failed", error });
+                } else {
+                    resolve({ status: true, message: "Event Deleted Successfully" });
+                }
             });
-        }catch(error){
-            reject({ status: false, message: "Event Deletion Failed", error});
-        }     
-    })   
+        } catch (error) {
+            reject({ status: false, message: "Event Deletion Failed", error });
+        }
+    })
 }
 
-function getCountCategories(){
+function getCountCategories() {
     return new Promise((resolve, reject) => {
-        try{
+        try {
             let sql = `SELECT eC.name_category, COUNT(e.name) AS amount 
                         FROM event_categories eC
                         LEFT JOIN events e
@@ -121,15 +121,15 @@ function getCountCategories(){
 
             db.query(sql, (error, result) => {
                 if (error) {
-                    reject({status: false, message: 'SQL event my category query failed'});
+                    reject({ status: false, message: 'SQL event my category query failed' });
                 } else {
                     resolve({ status: true, data: result });
                 }
-            }); 
-        }catch(error){
-            reject({status: false, message: "Event by category search failed"});
+            });
+        } catch (error) {
+            reject({ status: false, message: "Event by category search failed" });
         }
-    }) 
+    })
 }
 
-module.exports = {getEvents, getOneEvent, getEventsByUser, postEvent, updateEvent, deleteEvent, getCountCategories}
+module.exports = { getEvents, getOneEvent, getEventsByUser, postEvent, updateEvent, deleteEvent, getCountCategories }
