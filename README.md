@@ -156,56 +156,8 @@ These features provide a robust event management system with user control, secur
    ```
 
 #### MySQL
-1. Navigate to `http://localhost/phpmyadmin/`
-2. Create a Database called nodejs_events 
-3. Create three tables inside with :
-   ```sh
-    CREATE TABLE `users` (
-    `id_user` int(11) NOT NULL AUTO_INCREMENT,
-    `username` varchar(120) NOT NULL,
-     `email` varchar(120) NOT NULL,
-    `password` varchar(255) NOT NULL,
-    `image` blob DEFAULT NULL,
-    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-     `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-    PRIMARY KEY (`id_user`),
-    UNIQUE KEY `email` (`email`),
-    UNIQUE KEY `username` (`username`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
-   ```
+1. Create the data base using the nodejs_events.sql file in the Back End
 
-   ```sh
-    CREATE TABLE `events` (
-    `id_event` int(11) NOT NULL AUTO_INCREMENT,
-    `name` varchar(120) NOT NULL,
-    `user_id` int(11) NOT NULL,
-    `category` varchar(40) NOT NULL,
-    `description` text NOT NULL,
-    `date` date NOT NULL,
-    `time` time NOT NULL,
-    `address` text NOT NULL,
-    `longitude` decimal(40,38) NOT NULL,
-    `latitude` decimal(40,38) NOT NULL,
-    `image` varchar(200) NOT NULL,
-    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-     `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-     PRIMARY KEY (`id_event`),
-    KEY `user_id` (`user_id`),
-     KEY `category` (`category`),
-     CONSTRAINT `events_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id_user`),
-     CONSTRAINT `events_ibfk_2` FOREIGN KEY (`category`) REFERENCES `event_categories` (`name_category`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=96 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
-   ```
-
-   ```sh
-    CREATE TABLE `event_categories` (
-    `id_categories` int(11) NOT NULL AUTO_INCREMENT,
-    `name_category` varchar(40) NOT NULL,
-     PRIMARY KEY (`id_categories`),
-    KEY `name_category` (`name_category`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
-   ```
-4. Import the sample data from nodejs_events.json or create your own sample data
 
 <!-- ROADMAP -->
 ## Roadmap
