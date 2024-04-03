@@ -5,8 +5,8 @@ const cors = require("cors");
 const server = express();
 
 var corsOptions = {
-    origin: "https://events-app-nine-chi.vercel.app",
-    credentials: true,
+    origin: "https://events-app-nine-chi.vercel.app"
+    // credentials: true,
 };
 
 server.use(cors(corsOptions));
