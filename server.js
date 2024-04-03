@@ -3,6 +3,14 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require("cors");
 const server = express();
+
+var corsOptions = {
+    origin: "https://events-app-nine-chi.vercel.app",
+    credentials: true,
+};
+
+server.use(cors(corsOptions));
+
 exports.server = server;
 
 server.use(bodyParser.json());
@@ -19,14 +27,6 @@ server.listen(8080, (error) =>{
         console.log("Server started on port 8080");
     }
 })
-
-var corsOptions = {
-    origin: "https://events-app-nine-chi.vercel.app",
-    credentials: true,
-};
-
-server.use(cors(corsOptions));
-
 
 // a middleware with no mount path; gets executed for every request to the app
 // server.use(function(req, res, next) {
