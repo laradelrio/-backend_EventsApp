@@ -25,7 +25,7 @@ var corsOptions = {
     credentials: true,
 };
 
-app.use(cors(corsOptions));
+server.use(cors(corsOptions));
 
 
 // a middleware with no mount path; gets executed for every request to the app
