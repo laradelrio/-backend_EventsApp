@@ -21,7 +21,7 @@ server.listen(8080, (error) =>{
 })
 
 var corsOptions = {
-    origin: "*",
+    origin: "https://events-app-nine-chi.vercel.app",
     credentials: true,
 };
 
@@ -30,14 +30,19 @@ server.use(cors(corsOptions));
 
 // a middleware with no mount path; gets executed for every request to the app
 server.use(function(req, res, next) {
-    res.setHeader("Access-Control-Allow-Origin", '*');
-    res.setHeader("Access-Control-Allow-Methods", '*' );
-    res.header(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept"
-      );
-    next();
-  });
+    res.setHeader("Access-Control-Allow-Origin", "https://events-app-nine-chi.vercel.app");
+    res.setHeader("Access-Control-Allow-Methods", "*");
+    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.setHeader("Access-Control-Allow-Credentials", true); // if you are using credentials
+    if (req.method === 'OPTIONS') {
+        // Handling preflight request
+        res.sendStatus(200);
+    } else {
+        next();
+    }
+});
+
+
 
 
 //Routes
