@@ -25,6 +25,9 @@ var corsOptions = {
     credentials: true,
 };
 
+app.use(cors(corsOptions));
+
+
 // a middleware with no mount path; gets executed for every request to the app
 server.use(function(req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", 'https://events-app-nine-chi.vercel.app');
