@@ -21,7 +21,7 @@ server.listen(8080, (error) =>{
 })
 
 var corsOptions = {
-    origin: "https://events-app-nine-chi.vercel.app",
+    origin: "*",
     credentials: true,
 };
 
